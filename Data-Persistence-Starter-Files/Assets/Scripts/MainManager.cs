@@ -11,22 +11,28 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+	public Text BestScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
     private int m_Points;
     
+	private int bestScore = 0;
+	
     private bool m_GameOver = false;
 
-   
+   public GameObject scoreManager;
 	
 	
     // Start is called before the first frame update
     void Start()
     {
+		scoreManager = GameObject.Find("ScoreManager");
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
+		BestScoreText.text = $"High Score : {ScoreManager.Instance.KeptName} : {ScoreManager.Instance.KeptScore}";
+		
         int[] pointCountArray = new [] {1,1,2,2,5,5};
         for (int i = 0; i < LineCount; ++i)
         {
@@ -36,6 +42,7 @@ public class MainManager : MonoBehaviour
                 var brick = Instantiate(BrickPrefab, position, Quaternion.identity);
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
+				
             }
         }
     }
@@ -68,19 +75,33 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
+		
     }
+
+	void BestScore(int m_Points)
+	{
+		if (m_Points > bestScore)
+		{
+			bestScore = m_Points;
+			if (bestScore > ScoreManager.Instance.KeptScore)
+			{ScoreManager.Instance.KeptScore = bestScore;
+			ScoreManager.Instance.KeptName = ScoreManager.Instance.PlayerName;}
+			
+		}
+		
+	}
 
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+		BestScore(m_Points);
+		BestScoreText.text = $"High Score : {ScoreManager.Instance.KeptName} : {ScoreManager.Instance.KeptScore}";
+		ScoreManager.Instance.SaveName();
     }
 	
 	public void Menu()
 	{
-		
-		SceneManager.LoadScene(0);
-		
-		
+		SceneManager.LoadScene(0);		
 	}
 }

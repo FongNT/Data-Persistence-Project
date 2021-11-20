@@ -22,7 +22,7 @@ public class MenuUI : MonoBehaviour
 	public void Start()
 	{
 		if (ScoreManager.Instance.PlayerName != null)
-		{ScoreText.text = "High Score:" + ScoreManager.Instance.PlayerName; }	
+		{ScoreText.text = "High Score: " + ScoreManager.Instance.KeptName + " : " + ScoreManager.Instance.KeptScore; }	
 	}
 	
 	public void StartNew()

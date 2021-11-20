@@ -11,6 +11,9 @@ public class ScoreManager : MonoBehaviour
 		public static ScoreManager Instance;
 
 public string PlayerName;
+
+public int KeptScore;
+public string KeptName;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,26 +35,28 @@ public string PlayerName;
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
 		
-		LoadColor();
+		LoadName();
     }
 
 [System.Serializable]
 class SaveData
 {
-    public string PlayerName;
+    public string KeptName;
+	public int KeptScore;
 }
 
 public void SaveName()
 {
 	SaveData data = new SaveData();
-	data.PlayerName = PlayerName;
+	data.KeptName = KeptName;
+	data.KeptScore = KeptScore;
 	
 	string json = JsonUtility.ToJson(data);
 	
 	File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
 }
 
-public void LoadColor()
+public void LoadName()
 {
 	string path = Application.persistentDataPath + "/savefile.json";
 	if (File.Exists(path))
@@ -59,7 +64,8 @@ public void LoadColor()
 		string json = File.ReadAllText(path);
 		SaveData data = JsonUtility.FromJson<SaveData>(json);
 		
-		PlayerName = data.PlayerName;
+		KeptName = data.KeptName;
+		KeptScore = data.KeptScore;
 	}
 }
 }
